@@ -30,9 +30,9 @@ void  Display18B20Rom(char Rom);     //显示DS18B20序列号
 /**********************************************/
 void main()
 {        
-	uchar a,b,c,d,e,f,g,h;
+  uchar a,b,c,d,e,f,g,h;
   LCD_Init();
-	RW = 0;
+  RW = 0;
   DS18B20_Reset();
   delay(1);
   DS18B20_WriteByte(0x33);

@@ -1,32 +1,32 @@
 /******************************************************************
-»ùÓÚ51µ¥Æ¬»ú¶ÁÈ¡DS18B20µÄĞòÁĞºÅ£¬ÓÃLCD1602ÏÔÊ¾
+åŸºäº51å•ç‰‡æœºè¯»å–DS18B20çš„åºåˆ—å·ï¼Œç”¨LCD1602æ˜¾ç¤º
 
-¾ßÌåÁ¬½Ó¼ûÒı½Å¶¨Òå£¬°´ĞèĞŞ¸Ä
+å…·ä½“è¿æ¥è§å¼•è„šå®šä¹‰
 ******************************************************************/
 
 #include <reg52.h>
 #define uchar unsigned char
 #define uint unsigned int
 /********************************************************************/
-//LCDÒı½Å¶¨Òå
+//LCDå¼•è„šå®šä¹‰
 #define DATA P1
 sbit RS = P2^0;    
 sbit RW = P2^1; 
 sbit E = P2^2;
-//DS18B20Òı½Å¶¨Òå
+//DS18B20å¼•è„šå®šä¹‰
 sbit DQ = P2^7;
 /********************************************************************/
 void  delay(uint z);                          
-void  DS18B20_Reset(void);           //³õÊ¼»¯DS18B20
-bit   DS18B20_Readbit(void);         //¶ÁÒ»Î»Êı¾İ
-uchar DS18B20_ReadByte(void);        //¶ÁÒ»×Ö½ÚÊı¾İ
-void  DS18B20_WriteByte(uchar dat);  //Ğ´Ò»×Ö½ÚÊı¾İ
-void  LCD_WriteCom(uchar com);       //LCDÖ¸ÁîĞ´Èë
-void  LCD_WriteData(uchar dat);      //LCDÊı¾İĞ´Èë     
-void  LCD_Init();                    //LCD³õÊ¼»¯
-void  Display18B20Rom(char Rom);     //ÏÔÊ¾DS18B20ĞòÁĞºÅ
+void  DS18B20_Reset(void);           //åˆå§‹åŒ–DS18B20
+bit   DS18B20_Readbit(void);         //è¯»ä¸€ä½æ•°æ®
+uchar DS18B20_ReadByte(void);        //è¯»ä¸€å­—èŠ‚æ•°æ®
+void  DS18B20_WriteByte(uchar dat);  //å†™ä¸€å­—èŠ‚æ•°æ®
+void  LCD_WriteCom(uchar com);       //LCDæŒ‡ä»¤å†™å…¥
+void  LCD_WriteData(uchar dat);      //LCDæ•°æ®å†™å…¥     
+void  LCD_Init();                    //LCDåˆå§‹åŒ–
+void  Display18B20Rom(char Rom);     //æ˜¾ç¤ºDS18B20åºåˆ—å·
 /**********************************************/
-/*     Ö÷º¯Êı                                */
+/*     ä¸»å‡½æ•°                                */
 /**********************************************/
 void main()
 {        
@@ -60,7 +60,7 @@ void main()
 
 
 
-//ÉÏÊöº¯Êı¾ßÌå¶¨Òå
+//ä¸Šè¿°å‡½æ•°å…·ä½“å®šä¹‰
 void delay(uint z)
 {
 	uint x,y;

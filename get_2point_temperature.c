@@ -3,27 +3,27 @@
 #include <2pt.h>
 
 
-//Òı½Å¶¨Òå
-#define		DATA	P1          //LCD1602Êı¾İ¶Ë¿Ú
-sbit 		  DQ =  P2^7;			  //DS18B20Êı¾İ¶Ë¿Ú
+//å¼•è„šå®šä¹‰
+#define		DATA	P1          //LCD1602æ•°æ®ç«¯å£
+sbit 		  DQ =  P2^7;			  //DS18B20æ•°æ®ç«¯å£
 sbit 		  RS =	P2^0;
 sbit 		  RW =	P2^1;
 sbit 		  E  =	P2^2;
 
 
-//ÎÂ¶ÈÊı¾İ´æ´¢½á¹¹
+//æ¸©åº¦æ•°æ®å­˜å‚¨ç»“æ„
 typedef struct tagTempData
 {
-	unsigned char 					btThird;							//°ÙÎ»Êı¾İ					
-	unsigned char 					btSecond;							//Ê®Î»Êı¾İ
-	unsigned char 					btFirst;							//¸öÎ»Êı¾İ
-	unsigned char 					btDecimal;						//Ğ¡ÊıµãºóÒ»Î»Êı¾İ
-	unsigned char					  btNegative;						//ÊÇ·ñÎª¸ºÊı		
+	unsigned char 					btThird;							//ç™¾ä½æ•°æ®					
+	unsigned char 					btSecond;							//åä½æ•°æ®
+	unsigned char 					btFirst;							//ä¸ªä½æ•°æ®
+	unsigned char 					btDecimal;						//å°æ•°ç‚¹åä¸€ä½æ•°æ®
+	unsigned char					  btNegative;						//æ˜¯å¦ä¸ºè´Ÿæ•°		
 }TEMPDATA;
 TEMPDATA m_TempData;
 
 
-//DS18B20ĞòÁĞºÅ
+//DS18B20åºåˆ—å·
 
 const unsigned char code ROMData1[8] = {0x28, 0x70, 0x62, 0x77, 0x91, 0x0b, 0x02, 0x26};	//Uin
 const unsigned char code ROMData2[8] = {0x28, 0xe8, 0x8d, 0x77, 0x91, 0x19, 0x02, 0xfe};	//Uout
@@ -41,8 +41,8 @@ const unsigned char code ROMData7[8] = {0x28, 0x36, 0xC5, 0xB8, 0x00, 0x00, 0x00
 const unsigned char code ROMData8[8] = {0x28, 0x37, 0xC5, 0xB8, 0x00, 0x00, 0x00, 0x0B};	//U8
 */
 
-/**************************************DS18B20Ïà¹Øº¯Êı**************************************/
-//Ğ¾Æ¬³õÊ¼»¯º¯Êı
+/**************************************DS18B20ç›¸å…³å‡½æ•°**************************************/
+//èŠ¯ç‰‡åˆå§‹åŒ–å‡½æ•°
 void Initialization()
 {
 	while(1)
@@ -51,16 +51,16 @@ void Initialization()
 		Delay480us();
 		DQ = 1;
 		Delay60us();
-		if(!DQ)  				    //ÊÕµ½ds18b20µÄÓ¦´ğĞÅºÅ
+		if(!DQ)  				    //æ”¶åˆ°ds18b20çš„åº”ç­”ä¿¡å·
 		{	
 			DQ = 1;
-			Delay240us();		  //ÑÓÊ±240us
+			Delay240us();		  //å»¶æ—¶240us
 			break;		
 		}
 	}
 }
 
-//´ÓµÍÎ»¿ªÊ¼Ğ´Ò»¸ö×Ö½Ú
+//ä»ä½ä½å¼€å§‹å†™ä¸€ä¸ªå­—èŠ‚
 void WriteByte(unsigned char btData)
 {
 	unsigned char i, btBuffer;
@@ -85,7 +85,7 @@ void WriteByte(unsigned char btData)
 	}
 }
 
-//´ÓµÍÎ»¿ªÊ¼¶ÁÒ»¸ö×Ö½Ú
+//ä»ä½ä½å¼€å§‹è¯»ä¸€ä¸ªå­—èŠ‚
 unsigned char ReadByte()
 {
 	unsigned char i, btDest;
@@ -106,7 +106,7 @@ unsigned char ReadByte()
 }
 
 
-//ĞòÁĞºÅÆ¥Åäº¯Êı
+//åºåˆ—å·åŒ¹é…å‡½æ•°
 void MatchROM(const unsigned char *pMatchData)
 {
 	unsigned char i;
@@ -120,7 +120,7 @@ void MatchROM(const unsigned char *pMatchData)
 static TEMPDATA TempData1,TempData2;
 
 	
-//¶ÁÈ¡ÎÂ¶ÈÖµ
+//è¯»å–æ¸©åº¦å€¼
 TEMPDATA ReadTemperature()
 {
 	TEMPDATA TempData;
@@ -128,33 +128,33 @@ TEMPDATA ReadTemperature()
 	unsigned char btDot, iTempDataL;
 	static unsigned char i = 0;
 
-	TempData.btNegative = 0;						//ÎÂ¶ÈÎªÕı
+	TempData.btNegative = 0;						//æ¸©åº¦ä¸ºæ­£
 	i++;
-	if (i==3)                           //N¸ö18B20ÕâÀïÌõ¼ş¾ÍÎªi==N+1  
+	if (i==3)                           //Nä¸ª18B20è¿™é‡Œæ¡ä»¶å°±ä¸ºi==N+1  
 		i = 1;
 	Initialization();
-	WriteByte(SKIP_ROM);							  //Ìø¹ıROMÆ¥Åä
-	WriteByte(TEMP_SWITCH);							//Æô¶¯×ª»»
-	Delay500ms();  									    //µ÷ÓÃÒ»´Î¾ÍĞĞ	
+	WriteByte(SKIP_ROM);							  //è·³è¿‡ROMåŒ¹é…
+	WriteByte(TEMP_SWITCH);							//å¯åŠ¨è½¬æ¢
+	Delay500ms();  									    //è°ƒç”¨ä¸€æ¬¡å°±è¡Œ	
 	Delay500ms(); 	 		
 	Initialization();
 
-	//¶à¸öĞ¾Æ¬µÄÊ±ºòÓÃMatchROM(ROMData)»»µôWriteByte(SKIP_ROM)
+	//å¤šä¸ªèŠ¯ç‰‡çš„æ—¶å€™ç”¨MatchROM(ROMData)æ¢æ‰WriteByte(SKIP_ROM)
 	switch (i)
 	{
-		case 1 : MatchROM(ROMData1); break;			//Æ¥Åä1
-		case 2 : MatchROM(ROMData2); break;			//Æ¥Åä2
+		case 1 : MatchROM(ROMData1); break;			//åŒ¹é…1
+		case 2 : MatchROM(ROMData2); break;			//åŒ¹é…2
 		/*
-		case 3 : MatchROM(ROMData3); break;			//Æ¥Åä3
-		case 4 : MatchROM(ROMData4); break;			//Æ¥Åä4	
-		case 5 : MatchROM(ROMData5); break;			//Æ¥Åä5
-		case 6 : MatchROM(ROMData6); break;			//Æ¥Åä6
-		case 7 : MatchROM(ROMData7); break;			//Æ¥Åä7
-		case 8 : MatchROM(ROMData8); break;			//Æ¥Åä8
+		case 3 : MatchROM(ROMData3); break;			//åŒ¹é…3
+		case 4 : MatchROM(ROMData4); break;			//åŒ¹é…4	
+		case 5 : MatchROM(ROMData5); break;			//åŒ¹é…5
+		case 6 : MatchROM(ROMData6); break;			//åŒ¹é…6
+		case 7 : MatchROM(ROMData7); break;			//åŒ¹é…7
+		case 8 : MatchROM(ROMData8); break;			//åŒ¹é…8
 		*/
 	}
-	//WriteByte(SKIP_ROM);							//Ìø¹ıROMÆ¥Åä(µ¥¸öĞ¾Æ¬Ê±ÓÃÕâ¾ä»»µôÉÏÃæµÄswitch)
-	WriteByte(READ_MEMORY);							//¶ÁÊı¾İ
+	//WriteByte(SKIP_ROM);							//è·³è¿‡ROMåŒ¹é…(å•ä¸ªèŠ¯ç‰‡æ—¶ç”¨è¿™å¥æ¢æ‰ä¸Šé¢çš„switch)
+	WriteByte(READ_MEMORY);							//è¯»æ•°æ®
 	iTempDataL = ReadByte();
 	iTempDataH = ReadByte();	
 	iTempDataH <<= 8;
@@ -163,16 +163,16 @@ TEMPDATA ReadTemperature()
 	if (iTempDataH & 0x8000)
 	{
 		TempData.btNegative = 1;
-		iTempDataH = ~iTempDataH + 1;				//¸ºÊıÇó²¹
+		iTempDataH = ~iTempDataH + 1;				//è´Ÿæ•°æ±‚è¡¥
 	}
 
-	//ÎªÁËÊ¡È¥¸¡µãÔËËã´øÀ´µÄ¿ªÏú£¬¶ø²ÉÓÃÕûÊıºÍĞ¡Êı²¿·Ö·Ö¿ª´¦ÀíµÄ·½·¨(Ã»ÓĞËÄÉáÎåÈë)
-	btDot = (unsigned char)(iTempDataH & 0x000F);	//µÃµ½Ğ¡Êı²¿·Ö
-	iTempDataH >>= 4;							//µÃµ½ÕûÊı²¿·Ö
-	btDot *= 5; 									//btDot*10/16µÃµ½×ª»»ºóµÄĞ¡ÊıÊı¾İ
+	//ä¸ºäº†çœå»æµ®ç‚¹è¿ç®—å¸¦æ¥çš„å¼€é”€ï¼Œè€Œé‡‡ç”¨æ•´æ•°å’Œå°æ•°éƒ¨åˆ†åˆ†å¼€å¤„ç†çš„æ–¹æ³•(æ²¡æœ‰å››èˆäº”å…¥)
+	btDot = (unsigned char)(iTempDataH & 0x000F);	//å¾—åˆ°å°æ•°éƒ¨åˆ†
+	iTempDataH >>= 4;							//å¾—åˆ°æ•´æ•°éƒ¨åˆ†
+	btDot *= 5; 									//btDot*10/16å¾—åˆ°è½¬æ¢åçš„å°æ•°æ•°æ®
 	btDot >>= 3;
 
-	//Êı¾İ´¦Àí
+	//æ•°æ®å¤„ç†
 	TempData.btThird   = (unsigned char)iTempDataH / 100;
 	TempData.btSecond  = (unsigned char)iTempDataH % 100 / 10;
 	TempData.btFirst   = (unsigned char)iTempDataH % 10;
@@ -180,21 +180,21 @@ TEMPDATA ReadTemperature()
 	
 	switch(i)
 	{
-		case 1 : TempData1=TempData; break;			//Æ¥Åä1
-		case 2 : TempData2=TempData; break;			//Æ¥Åä2
+		case 1 : TempData1=TempData; break;			//åŒ¹é…1
+		case 2 : TempData2=TempData; break;			//åŒ¹é…2
 	}
 	
-	//¿¼ÂÇÔÚÕâ¸öµØ·½½«ÎÂ¶È´úÈë¹«Ê½Ëã³ö¹¦ÂÊ×÷Îª·µ»ØÖµ
+	//è€ƒè™‘åœ¨è¿™ä¸ªåœ°æ–¹å°†æ¸©åº¦ä»£å…¥å…¬å¼ç®—å‡ºåŠŸç‡ä½œä¸ºè¿”å›å€¼
 	
 	
 	
 	return TempData;
 }
-/**************************************DS18B20Ïà¹Øº¯Êı**************************************/
+/**************************************DS18B20ç›¸å…³å‡½æ•°**************************************/
 
 
-/****************************************LCDÏà¹Øº¯Êı****************************************/
-//ÅĞ¶ÏÃ¦º¯Êı
+/****************************************LCDç›¸å…³å‡½æ•°****************************************/
+//åˆ¤æ–­å¿™å‡½æ•°
 void Busy()
 {
 	DATA = 0xff;
@@ -207,7 +207,7 @@ void Busy()
    	E = 0;
 }
 
-//Ğ´Ö¸Áîº¯Êı
+//å†™æŒ‡ä»¤å‡½æ•°
 void WriteCommand(unsigned char btCommand)
 {
 	Busy();
@@ -218,15 +218,15 @@ void WriteCommand(unsigned char btCommand)
 	E = 0;
 }
 
-//Ğ¾Æ¬³õÊ¼»¯º¯Êı
+//èŠ¯ç‰‡åˆå§‹åŒ–å‡½æ•°
 void LCDInit()
 {
-	WriteCommand(0x0c);	//¿ªÏÔÊ¾,ÎŞ¹â±êÏÔÊ¾
-	WriteCommand(0x06);	//ÎÄ×Ö²»¶¯£¬¹â±ê×Ô¶¯ÓÒÒÆ
-	WriteCommand(0x38);	//ÉèÖÃÏÔÊ¾Ä£Ê½:8Î»2ĞĞ5x7µãÕó
+	WriteCommand(0x0c);	//å¼€æ˜¾ç¤º,æ— å…‰æ ‡æ˜¾ç¤º
+	WriteCommand(0x06);	//æ–‡å­—ä¸åŠ¨ï¼Œå…‰æ ‡è‡ªåŠ¨å³ç§»
+	WriteCommand(0x38);	//è®¾ç½®æ˜¾ç¤ºæ¨¡å¼:8ä½2è¡Œ5x7ç‚¹é˜µ
 }
 
-//Ğ´Êı¾İº¯Êı
+//å†™æ•°æ®å‡½æ•°
 void WriteData(unsigned char btData)
 {
 	Busy();
@@ -237,18 +237,18 @@ void WriteData(unsigned char btData)
 	E = 0;
 }
 
-//ÇåÆÁº¯Êı
+//æ¸…å±å‡½æ•°
 void Clear(){
 	WriteCommand(1);
 }
 
-//µ¥¸ö×Ö·ûÏÔÊ¾º¯Êı
+//å•ä¸ªå­—ç¬¦æ˜¾ç¤ºå‡½æ•°
 void DisplayOne(bit bRow, unsigned char btColumn, unsigned char btData, bit bIsNumber)
 {
 	if (bRow) 		
-		WriteCommand(0xc0 + btColumn);  //ÏÔÊ¾ÔÚµÚ1ĞĞ
+		WriteCommand(0xc0 + btColumn);  //æ˜¾ç¤ºåœ¨ç¬¬1è¡Œ
 	else 
-		WriteCommand(0x80 + btColumn);  //ÏÔÊ¾ÔÚµÚ0ĞĞ
+		WriteCommand(0x80 + btColumn);  //æ˜¾ç¤ºåœ¨ç¬¬0è¡Œ
 
 	if (bIsNumber)
 		WriteData(btData + 0x30);
@@ -256,21 +256,21 @@ void DisplayOne(bit bRow, unsigned char btColumn, unsigned char btData, bit bIsN
 		WriteData(btData);
 }
 
-//×Ö·û´®ÏÔÊ¾º¯Êı
+//å­—ç¬¦ä¸²æ˜¾ç¤ºå‡½æ•°
 void DisplayString(bit bRow, unsigned char btColumn, unsigned char *pData)
 {
 	while (*pData != '\0')
    	{
    		if (bRow) 
-				WriteCommand(0xc0 + btColumn);	//ÏÔÊ¾ÔÚµÚ1ĞĞ
+				WriteCommand(0xc0 + btColumn);	//æ˜¾ç¤ºåœ¨ç¬¬1è¡Œ
    		else  	  
-				WriteCommand(0x80 + btColumn);	//ÏÔÊ¾ÔÚµÚ0ĞĞ
-		WriteData(*(pData++));			        //ÒªÏÔÊ¾µÄÊı¾İ
-		btColumn++;									        //ÁĞÊı¼ÓÒ»
+				WriteCommand(0x80 + btColumn);	//æ˜¾ç¤ºåœ¨ç¬¬0è¡Œ
+		WriteData(*(pData++));			        //è¦æ˜¾ç¤ºçš„æ•°æ®
+		btColumn++;									        //åˆ—æ•°åŠ ä¸€
    	}
 }
 
-////ÎŞ·ûºÅÕûĞÍ£¨u16£©ÏÔÊ¾º¯Êı  Ò²¿É´«ÈëintĞÍ
+////æ— ç¬¦å·æ•´å‹ï¼ˆu16ï¼‰æ˜¾ç¤ºå‡½æ•°  ä¹Ÿå¯ä¼ å…¥intå‹
 //void Display_u16(bit bRow, u8 btColumn, u16 x)
 //{
 //	int k;
@@ -286,12 +286,12 @@ void DisplayString(bit bRow, unsigned char btColumn, unsigned char *pData)
 //		DisplayOne(bRow, btColumn+k, u16str[k], 0);
 //	} 
 //}
-/****************************************LCDÏà¹Øº¯Êı****************************************/
+/****************************************LCDç›¸å…³å‡½æ•°****************************************/
 
 
 
 
-//Êı¾İ´¦Àí×Ó³ÌĞò£¨»ñÈ¡ÎÂ¶È²¢Í¨¹ıLCDÏÔÊ¾£©
+//æ•°æ®å¤„ç†å­ç¨‹åºï¼ˆè·å–æ¸©åº¦å¹¶é€šè¿‡LCDæ˜¾ç¤ºï¼‰
 void DataProcess()
 {
 	m_TempData = ReadTemperature();

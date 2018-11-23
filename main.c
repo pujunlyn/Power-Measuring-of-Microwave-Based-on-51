@@ -9,7 +9,7 @@ typedef unsigned char u8;
 
 //引脚定义
 #define		DATA	P1          //LCD1602数据端口
-sbit 		  DQ =  P2^7;			  //DS18B20数据端口
+sbit 		  DQ =  P2^7;	    //DS18B20数据端口
 sbit 		  RS =	P2^0;       //LCD1602 RS
 sbit 		  RW =	P2^1;       //LCD1602 RW
 sbit 		  E  =	P2^2;       //LCD1602 E
@@ -23,8 +23,8 @@ typedef struct tagTempData
 	u8 					btThird;			//百位数据					
 	u8 					btSecond;			//十位数据
 	u8 					btFirst;			//个位数据
-	u8 					btDecimal;		//小数点后一位数据
-	u8					btNegative;		//是否为负数		
+	u8 					btDecimal;		        //小数点后一位数据
+	u8					btNegative;		        //是否为负数		
 }TEMPDATA;
 TEMPDATA m_TempData;
 
@@ -100,7 +100,7 @@ void Initialization()
 		Delay480us();
 		DQ = 1;
 		Delay60us();
-		if(!DQ)  				    //收到ds18b20的应答信号
+		if(!DQ)  		          //收到ds18b20的应答信号
 		{	
 			DQ = 1;
 			Delay240us();		  //延时240us
@@ -170,14 +170,14 @@ TEMPDATA ReadTemperature()
 	u8 btDot, iTempDataL;
 	static u8 i = 0;
 
-	TempData.btNegative = 0;						//温度为正
+	TempData.btNegative = 0;	    //温度为正
 	i++;
 	if (i==3)                           //N个18B20这里条件就为i==N+1  
 		i = 1;
 	Initialization();
-	WriteByte(SKIP_ROM);							  //跳过ROM匹配
-	WriteByte(TEMP_SWITCH);							//启动转换
-	Delay500ms();  									    //调用一次就行	
+	WriteByte(SKIP_ROM);		    //跳过ROM匹配
+	WriteByte(TEMP_SWITCH);		    //启动转换
+	Delay500ms();  			    //调用一次就行	
 	Delay500ms(); 	 		
 	Initialization();
 
@@ -186,7 +186,7 @@ TEMPDATA ReadTemperature()
 		case 1 : MatchROM(ROMData1); break;			//匹配1
 		case 2 : MatchROM(ROMData2); break;			//匹配2
 	}
-	WriteByte(READ_MEMORY);						  //读数据
+	WriteByte(READ_MEMORY);						//读数据
 	iTempDataL = ReadByte();
 	iTempDataH = ReadByte();	
 	iTempDataH <<= 8;
@@ -200,8 +200,8 @@ TEMPDATA ReadTemperature()
 
 	//为了省去浮点运算带来的开销，而采用整数和小数部分分开处理的方法(没有四舍五入)
 	btDot = (u8)(iTempDataH & 0x000F);	//得到小数部分
-	iTempDataH >>= 4;							      //得到整数部分
-	btDot *= 5; 									      //btDot*10/16得到转换后的小数数据
+	iTempDataH >>= 4;		        //得到整数部分
+	btDot *= 5; 				//btDot*10/16得到转换后的小数数据
 	btDot >>= 3;
 
 	//数据处理
